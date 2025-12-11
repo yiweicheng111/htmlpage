@@ -11,7 +11,7 @@
         position: absolute;
         display: block;
         height: 100vh;
-        width: 60vw;
+        width: 40vw;
         left: 20%;
         padding: 0 0;
         z-index: -100;
@@ -46,14 +46,14 @@
     #info p{
         color:white;
         font-family: Arial, Helvetica, sans-serif;
-        font-size: 50px;
+        font-size: 24px;
         text-align: center;
         transition: opacity 0.5s;
     }
     #info li {
         color:white;
         font-family: Arial, Helvetica, sans-serif;
-        font-size: 50px;
+        font-size: 24px;
         transition: opacity 0.5s;
     }
     #info .ao{
@@ -120,13 +120,16 @@
         window.currentAnim = 'tree';
         const canvas = document.querySelector('.tree');
         const ctx = canvas.getContext('2d');
-        const dpr = window.devicePixelRatio;
         const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width*dpr;
-        canvas.height = rect.height*dpr;
-        canvas.style.width = rect.width+'px';
-        canvas.style.height = rect.height+'px';
-        ctx.scale(dpr,dpr);
+        function resize(){
+           const dpr = window.devicePixelRatio;
+            canvas.width = window.innerWidth*dpr*0.4;
+            canvas.height = window.innerHeight*dpr;
+            canvas.style.width = window.innerWidth*0.4+'px';
+            canvas.style.height = window.innerHeight+'px';
+            ctx.scale(dpr,dpr);
+        }
+        resize();
         let speedmul = 0.0005;
         async function frac(startx,starty,scale,angle,depth,dt,shadowBlur=15){
             if (depth==0) return;
@@ -163,10 +166,11 @@
             ctx.fillStyle = 'black';
             ctx.fillRect(0,0,canvas.width,canvas.height);
             ctx.clearRect(0,0,canvas.width,canvas.height);
-            frac(canvas.width/1.2,canvas.height/2+700,350,-Math.PI/2,7,dt);
+            frac(canvas.width/1.2,canvas.height/2,350,-Math.PI/2,7,dt);
         }
         animate();
-
+        
+        window.addEventListener('resize',resize);
     </script>
 </body>
 </html>
