@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>final yiwei c</title>
+</head>
+<style>
+ 
+    canvas{
+        position: absolute;
+        display: block;
+        height: 100vh;
+        width: 40vw;
+        left: 20%;
+        padding: 0 0;
+        z-index: -100;
+    }
+    #nav{
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        width: 10vw;
+        height: 100vh;
+        float: left;
+        z-index: 1;
+    }
+    #nav button{
+        background: none;
+        border-style: none;
+        color: white;
+        height: 10%;
+        font-size: 44px;
+        transition: transform 1s,box-shadow 0.3s;
+    }
+    #nav button:hover{
+        cursor: grab;
+        transform: scale(1.2);
+    }
+    #info{
+        height: 80vh;
+        width: 40vw;
+        margin-top: 10%;
+        float: right;
+    }
+    #info p{
+        color:white;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 50px;
+        text-align: center;
+        transition: opacity 0.5s;
+    }
+    #info li {
+        color:white;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 50px;
+        transition: opacity 0.5s;
+    }
+    #info .ao{
+        animation: opacityin 1.3s ease 1;
+    }
+    @keyframes opacityin{
+        0%{
+            opacity: 0;
+        }
+        100%{
+            opacity: 1;
+        }
+    }
+</style>
+<body style="background-color: black;">
+    <noscript>js is disabled so go here <a>https://docs.google.com/document/d/17CsJ9gVY8E-1jWSOJJ_pb40I1IwQlffgZFNfULr4m7U/edit?tab=t.0</a></noscript>
+    <div id="nav">
+        <i style="color:white;font-family:Arial;font-size: 150px; opacity: 0.3;">YIWEI CHENG</i>
+        <button onclick="revealobjective()">OBJECTIVE</button>
+        <button onclick="revealcontact()">CONTACT</button>
+        <button onclick="revealskills()">SKILLS</button>
+        <button onclick="revealexperience()">EXPERIENCE</button>
+        <button onclick="revealeducation()">EDUCATION</button>
+    </div>
+    
+    <div id="info">
+        <script>
+        const infotext = document.getElementById("info");
+        console.log(infotext);
+        function revealobjective(){
+            infotext.innerHTML = "<p class='ao'>I am a versatile learner, who can quickly adapt to changes in computer science. Once I graduate, I plan on taking computer science or robotics engineering once I graduate. </p>"
+        }
+        function revealcontact(){
+            infotext.innerHTML = "<p class='ao'>Yiwei Cheng</p><p class='ao'>fullerton</p><p class='ao'>10 grade at sunny hills \
+                </p> <p class='ao'> <a style='color:white' href='mailto:sin2pluscos2equal1harharhar@gmail.com'>Click to send me an email </a></p>"
+        }
+         function revealskills(){
+            infotext.innerHTML = "<ol><li class='ao'>Swims in the high school swim team</li>\
+                <li class='ao'>C++ experience with basic web dev knowledge</li>\
+                <li class='ao'>Proficient in all high school math up to calculus </li>\
+                <li class='ao'>In ap comp sci A and ap ab calc </li>\
+                <li class='ao'>1400 elo on chess.com </li>\
+                </ol>"
+        }
+         function revealexperience(){
+            infotext.innerHTML = "<ol><li class='ao'>Volunteered at operation christmas child</li>\
+                <li class='ao'>Volunteered at Mary's Kitchen Pantry (hours avalible upon request</li>\
+                <li class='ao'>Proficient in all high school math up to calculus </li>\
+                <li class='ao'>In coding and math club</li>\
+                </ol>"
+        }
+         function revealeducation(){
+            infotext.innerHTML = "<ol><li>10th grade Student at Sunny hills</li>\
+                <li class='ao'> planning to graduate in 2028</li>\
+                <li class='ao'>Proficient in all high school math up to calculus </li>\
+                <li class='ao'> 4.2143 weighted gpa and 3.9286 unweighted gpa</li>\
+                </ol>"
+        }
+    </script>
+    </div>
+    <canvas class="tree"></canvas>
+   
+    <script>
+        window.currentAnim = 'tree';
+        const canvas = document.querySelector('.tree');
+        const ctx = canvas.getContext('2d');
+        const dpr = window.devicePixelRatio;
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width*dpr;
+        canvas.height = rect.height*dpr;
+        canvas.style.width = rect.width+'px';
+        canvas.style.height = rect.height+'px';
+        ctx.scale(dpr,dpr);
+        let speedmul = 0.0005;
+        async function frac(startx,starty,scale,angle,depth,dt,shadowBlur=15){
+            if (depth==0) return;
+            const speed = (10-depth+1)*speedmul;
+            const osc = 0.4*Math.sin(speed*dt);
+            const newx = startx+scale*Math.cos(angle+osc);
+            const newy = starty+scale*Math.sin(angle+osc);
+            ctx.save();
+            ctx.strokeStyle = 'rgb(0,255,0)';
+            ctx.shadowColor = ctx.strokeStyle;
+            ctx.shadowBlur = shadowBlur;
+            ctx.beginPath();
+            ctx.moveTo(startx,starty);
+            ctx.lineTo(newx,newy);
+            ctx.stroke();
+            ctx.restore();
+            const newscale = scale*0.75;
+            const newangleft = angle-Math.PI/6;
+            const newangright = angle+Math.PI/6;
+            frac(newx,newy,newscale,newangleft,depth-1,dt);
+            frac(newx,newy,newscale,newangright,depth-1,dt);
+        }
+        let pn = performance.now();
+        let speed = 5;
+        function animate(){
+            if (window.currentAnim != 'tree'){
+                canvas.style.position = 'none';
+                return
+            }
+          
+            requestAnimationFrame(animate);
+            ctx.clearRect(0,0,canvas.width*10,canvas.height*10);
+            let dt = pn-performance.now();
+            ctx.fillStyle = 'black';
+            ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            frac(canvas.width/1.2,canvas.height/2+700,350,-Math.PI/2,7,dt);
+        }
+        animate();
+
+    </script>
+</body>
+</html>
